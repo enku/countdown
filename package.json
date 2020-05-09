@@ -1,0 +1,14 @@
+{
+  "name": "countdown",
+  "version": "1.0.0",
+  "description": "The Final Countdown",
+  "main": "countdown",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Albert Hopkins <marduk@letterboxes.org>",
+  "license": "GPL-3.0-or-later",
+  "devDependencies": {
+    "node-minify": "^3.6.0"
+  }
+}

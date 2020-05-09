@@ -5,14 +5,14 @@ import tempfile
 import webbrowser
 
 
-TEMPLATE = r"""include(countdown.html)"""
+TEMPLATE = r"""include(countdown.html.minified)"""
 
 
 def main():
     """Entry point"""
     seconds = sys.argv[1]
 
-    html = TEMPLATE.replace("let seconds = 0;", f"let seconds = {seconds};")
+    html = TEMPLATE.replace("let seconds=0;", f"let seconds={seconds};")
     htmlfile = tempfile.NamedTemporaryFile(
         "w", buffering=-1, encoding="utf-8", suffix=".html", delete=False
     )
