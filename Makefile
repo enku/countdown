@@ -8,12 +8,16 @@ PYTHON := countdown.py
 TARGET := countdown
 MINIFY := node-minify --silence
 
-export PATH := $(CURDIR)/node_modules/.bin:$(PATH)
+export PATH := $(CURDIR)/node_modules/.bin:$(CURDIR)/.venv/bin:$(PATH)
+export PIPENV_VENV_IN_PROJECT := 1
 
 $(TARGET): $(PYTHON) $(HTML_MINIFIED)
 	m4 $< > .tmp-$@
 	chmod +x .tmp-$@
 	mv .tmp-$@ $@
+
+.venv:
+	pipenv sync --bare --dev
 
 node_modules:
 	npm install
@@ -29,5 +33,23 @@ node_modules:
 %.js.minified: %.js node_modules
 	$(MINIFY) -c uglify-es --input $< --output $@
 
+.PHONY: lint-css
+lint-css: node_modules
+	csslint --quiet $(CSS)
+
+lint-html: .venv
+	html_lint.py --disable=concerns_separation $(HTML)
+
+.PHONY: lint-js
+lint-js: node_modules
+	eslint $(JAVSCRIPT)
+
+.PHONY: lint-python
+lint-python: .venv
+	black --check --quiet $(PYTHON)
+
+.PHONY: lint
+lint: lint-css lint-js lint-html lint-python
+
 clean:
-	rm -rf $(TARGET) $(CSS_MINIFIED) $(HTML_MINIFIED) $(JAVASCRIPT_MINIFIED) node_modules
+	rm -rf $(TARGET) $(CSS_MINIFIED) $(HTML_MINIFIED) $(JAVASCRIPT_MINIFIED) .venv node_modules
