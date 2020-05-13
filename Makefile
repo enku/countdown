@@ -4,17 +4,14 @@ HTML := countdown.html
 HTML_MINIFIED := $(HTML:=.minified)
 JAVSCRIPT := countdown.js
 JAVASCRIPT_MINIFIED := $(JAVSCRIPT:=.minified)
-PYTHON := countdown.py
-TARGET := countdown
+TARGET := rocket.html
 MINIFY := node-minify --silence
 
 export PATH := $(CURDIR)/node_modules/.bin:$(CURDIR)/.venv/bin:$(PATH)
 export PIPENV_VENV_IN_PROJECT := 1
 
-$(TARGET): $(PYTHON) $(HTML_MINIFIED)
-	m4 $< > .tmp-$@
-	chmod +x .tmp-$@
-	mv .tmp-$@ $@
+$(TARGET): $(HTML_MINIFIED)
+	cp $< $@
 
 .venv:
 	pipenv sync --bare --dev
@@ -44,12 +41,8 @@ lint-html: .venv
 lint-js: node_modules
 	eslint $(JAVSCRIPT)
 
-.PHONY: lint-python
-lint-python: .venv
-	black --check --quiet $(PYTHON)
-
 .PHONY: lint
-lint: lint-css lint-js lint-html lint-python
+lint: lint-css lint-js lint-html
 
 clean:
 	rm -rf $(TARGET) $(CSS_MINIFIED) $(HTML_MINIFIED) $(JAVASCRIPT_MINIFIED) .venv node_modules

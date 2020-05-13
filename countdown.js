@@ -1,4 +1,10 @@
-let seconds = 0;
+function getSeconds() {
+  const searchParams = new URLSearchParams(window.location.search);
+
+  return parseInt(searchParams.get('s') || '10', 10);
+}
+
+let seconds = getSeconds();
 
 function countDown() {
   const count = document.getElementById('count');
